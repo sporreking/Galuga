@@ -1,4 +1,4 @@
-package org.galuga.gamestate;
+package org.galuga.client.gamestate;
 
 import sk.gamestate.GameState;
 

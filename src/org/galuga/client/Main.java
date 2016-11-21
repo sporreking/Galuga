@@ -1,6 +1,6 @@
-package org.galuga;
+package org.galuga.client;
 
-import org.galuga.gamestate.GameStates;
+import org.galuga.client.gamestate.GameStates;
 
 import sk.audio.AudioManager;
 import sk.game.Game;
