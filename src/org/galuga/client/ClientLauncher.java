@@ -6,7 +6,7 @@ import sk.audio.AudioManager;
 import sk.game.Game;
 import sk.game.GameProperties;
 
-public class Main {
+public class ClientLauncher {
 	
 	public static void main(String[] args) {
 		
