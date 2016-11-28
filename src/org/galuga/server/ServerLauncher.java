@@ -1,28 +1,26 @@
 package org.galuga.server;
 
-import java.io.IOException;
+import org.galuga.Galuga;
+import org.galuga.common.packet.Packets;
+import org.galuga.server.net.Server;
 
 import sk.net.SKNet;
-import sk.net.SKServer;
 
 public class ServerLauncher {
 	
 	public static void main(String[] args) {
+		init();
 		
-		SKNet.init();
+		Server.start(Galuga.IP, Galuga.PORT);
 		
-		SKServer server = new SKServer();
+		InputManager.start();
 		
-		server.addPacketListener(new ServerListener());
-		
-		try {
-			server.start();
-			server.bind("192.168.1.8", 6969);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		while(true);
+		Server.server.stop("Server closed");
 	}
 	
+	public static void init() {
+		System.out.println("Starting Galuga Server v" + Galuga.VERSION);
+		SKNet.init();
+		Packets.register();
+	}
 }
