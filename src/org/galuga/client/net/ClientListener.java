@@ -1,8 +1,8 @@
 package org.galuga.client.net;
 
 import org.galuga.client.gamestate.GameStates;
-import org.galuga.client.gamestate.menu.GamePickMenu;
-import org.galuga.client.gamestate.menu.GamePickMenu.LobbyListItem;
+import org.galuga.client.gamestate.menu.LobbyPickMenu;
+import org.galuga.client.gamestate.menu.LobbyPickMenu.LobbyListItem;
 import org.galuga.common.packet.PacketLogin;
 import org.galuga.common.packet.game.PacketFetchLobby;
 import org.galuga.common.packet.game.PacketJoinLobby;
@@ -46,7 +46,7 @@ public class ClientListener implements SKPacketListener {
 		
 		//Leave lobby
 		else if(packet instanceof PacketLeaveLobby) {
-			GameStateManager.enterState(GameStates.GAME_PICK_MENU);
+			GameStateManager.enterState(GameStates.LOBBY_PICK_MENU);
 		}
 		
 		//Packets that have to be handled at the main thread

@@ -30,7 +30,7 @@ public class PacketQueue {
 			//Fetch lobby
 			if(packet instanceof PacketFetchLobby) {
 				PacketFetchLobby p = (PacketFetchLobby) packet;
-				GameStates.GAME_PICK_MENU.add(p.ID, p.NAME, p.PLAYERS);
+				GameStates.LOBBY_PICK_MENU.add(p.ID, p.NAME, p.PLAYERS);
 			}
 			
 			//Fetch user

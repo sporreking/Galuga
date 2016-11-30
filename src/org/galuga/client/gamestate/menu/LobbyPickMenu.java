@@ -4,7 +4,9 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.galuga.client.gamestate.Background;
 import org.galuga.client.gamestate.GameStates;
+import org.galuga.client.gui.Button;
 import org.galuga.client.net.Client;
 import org.galuga.client.net.PacketQueue;
 import org.galuga.common.GameMode;
@@ -22,7 +24,7 @@ import sk.gfx.Texture;
 import sk.gfx.gui.GUIButton;
 import sk.util.vector.Vector3f;
 
-public class GamePickMenu implements GameState {
+public class LobbyPickMenu implements GameState {
 	
 	private ArrayList<LobbyListItem> lobbyList;
 	
@@ -34,13 +36,6 @@ public class GamePickMenu implements GameState {
 	private Entity refreshButton;
 	private Entity createButton;
 	
-	//Texture
-	private FontTexture ft_create;
-	private FontTexture ft_refresh;
-	private FontTexture ft_back;
-	
-	private ArrayList<Texture> gameTextures;
-	
 	//Root
 	private Root root;
 	
@@ -49,44 +44,26 @@ public class GamePickMenu implements GameState {
 		
 		//Game list
 		lobbyList = new ArrayList<>();
-		gameTextures = new ArrayList<>();
-		
-		//Textures
-		ft_create = new FontTexture("Create", 128, 16, 0, 16,
-				new Font("Fixedsys", Font.BOLD, 24), new Vector3f(1, 0, 0));
-		
-		ft_refresh = new FontTexture("Refresh", 128, 16, 0, 16,
-				new Font("Fixedsys", Font.BOLD, 24), new Vector3f(1, 0, 0));
-		
-		ft_back = new FontTexture("Back", 128, 16, 0, 16,
-				new Font("Fixedsys", Font.BOLD, 24), new Vector3f(1, 0, 0));
 		
 		//Buttons
-		GUIButton b_create = new GUIButton(-.5f, -.5f, 64 * 2, 0, 64, 16);
-		b_create.setTexture(ft_create);
-		b_create.setOnClick(() -> {
+		createButton = new Entity().add(0, new Button("Create", -.5f, 48, 32, () -> {
 			//Tell server to create game lobby
 			Client.client.send(new PacketCreateLobby("Lobby", selectedMode));
-		});
-		createButton = new Entity().add(0, b_create);
+		}, 36f));
 		
-		GUIButton b_refresh = new GUIButton(-.5f, -.5f, 64 * 1, 0, 64, 16);
-		b_refresh.setTexture(ft_refresh);
-		b_refresh.setOnClick(() -> {
+		refreshButton = new Entity().add(0, new Button("Refresh", -.5f, 0, 32, () -> {
 			refresh();
-		});
-		refreshButton = new Entity().add(0, b_refresh);
+		}, 36f));
 		
-		GUIButton b_back = new GUIButton(-.5f, -.5f, 64 * 0, 0, 64, 16);
-		b_back.setTexture(ft_back);
-		b_back.setOnClick(() -> {
+		backButton = new Entity().add(0, new Button("Back", -.5f, -48, 32, () -> {
 			GameStateManager.enterState(GameStates.MODE_MENU);
-		});
-		backButton = new Entity().add(0, b_back);
+		}, 36f));
 		
 		//Root
 		root = new Root().add(0, "b_create", createButton).add(0, "b_back", backButton)
 				.add(0, "b_refresh", refreshButton).add(0, "lobby_list", new Container());
+		
+		root.add(-1, "background", new Entity().add(0, new Background()));
 		
 		//Request games
 		refresh();
@@ -100,9 +77,6 @@ public class GamePickMenu implements GameState {
 	public void refresh() {
 		lobbyList.clear();
 		((Container) root.get("lobby_list")).destroy();
-		for(Texture t : gameTextures)
-			t.destroy();
-		gameTextures.clear();
 		Client.client.send(new PacketRequestLobbys(GameMode.ARCADE));
 	}
 	
@@ -115,25 +89,16 @@ public class GamePickMenu implements GameState {
 	 * @param players the amount of players in this lobby.
 	 */
 	public synchronized void add(int id, String name, int players) {
-		lobbyList.add(new LobbyListItem(id, name, players));
+		LobbyListItem lobbyListItem = new LobbyListItem(id, name, players);
 		
-		Root root = new Root();
+		lobbyList.add(lobbyListItem);
 		
-		Entity button = new Entity();
-		FontTexture texture = new FontTexture(lobbyList.get(lobbyList.size() - 1).toString(),
-				128, 16, 0, 8, new Font("Fixedsys", Font.BOLD, 11), new Vector3f(1, 0, 0));
-		GUIButton b_button = new GUIButton(0, .75f,
-				0, -(lobbyList.size() - 1) * 16, 128, 16);
-		gameTextures.add(texture);
-		b_button.setTexture(texture);
-		b_button.setOnClick(() -> {
+		Entity button = new Entity().add(0, new Button(lobbyListItem.toString(), .75f,
+				-(lobbyList.size() - 1) * 32, 32, () -> {
 			Client.client.send(new PacketJoinLobby(id, false));
-		});
-		button.add(0, b_button);
+		}, 36f));
 		
-		root.add(0, "button", button);
-		
-		((Container) this.root.get("lobby_list")).add(root);
+		((Container) this.root.get("lobby_list")).add(button);
 	}
 	
 	@Override
@@ -153,15 +118,8 @@ public class GamePickMenu implements GameState {
 		//Root
 		root.destroy();
 		
-		//Texture
-		ft_create.destroy();
-		ft_back.destroy();
-		
-		//Game list
+		//Lobby list
 		lobbyList.clear();
-		for(Texture t : gameTextures)
-			t.destroy();
-		gameTextures.clear();
 	}
 	
 	public static class LobbyListItem {

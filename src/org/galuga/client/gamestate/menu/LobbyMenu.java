@@ -2,7 +2,10 @@ package org.galuga.client.gamestate.menu;
 
 import java.awt.Font;
 
+import org.galuga.client.gamestate.Background;
 import org.galuga.client.gamestate.GameStates;
+import org.galuga.client.gui.Button;
+import org.galuga.client.gui.LobbySlot;
 import org.galuga.client.net.Client;
 import org.galuga.client.net.PacketQueue;
 import org.galuga.common.GameMode;
@@ -30,10 +33,6 @@ public class LobbyMenu implements GameState {
 	private Entity startButton;
 	private Entity backButton;
 	
-	//Texture
-	private FontTexture ft_start;
-	private FontTexture ft_back;
-	
 	//Root
 	private Root root;
 	
@@ -43,34 +42,24 @@ public class LobbyMenu implements GameState {
 	@Override
 	public void init() {
 		
-		//Textures
-		ft_start = new FontTexture("Start", 64, 16, 0, 16,
-				new Font("Fixedsys", Font.BOLD, 24), new Vector3f(1, 0, 0));
-		
-		ft_back = new FontTexture("Back", 64, 16, 0, 16,
-				new Font("Fixedsys", Font.BOLD, 24), new Vector3f(1, 0, 0));
-		
 		//Buttons
-		GUIButton b_start = new GUIButton(-.5f, -.5f, 64, 0, 64, 16);
-		b_start.setTexture(ft_start);
-		b_start.setOnClick(() -> {
+		startButton = new Entity().add(0, new Button("Start", -.5f, 24, 32, () -> {
 			System.out.println("Start!");
-		});
-		startButton = new Entity().add(0, b_start);
+		}, 36f));
 		
-		GUIButton b_back = new GUIButton(-.5f, -.5f, 0, 0, 64, 16);
-		b_back.setTexture(ft_back);
-		b_back.setOnClick(() -> {
+		backButton = new Entity().add(0, new Button("Back", -.5f, -24, 32, () -> {
 			Client.client.send(new PacketLeaveLobby(lobbyID));
 			lobbyID = -1;
-		});
-		backButton = new Entity().add(0, b_back);
+		}, 36f));
 		
 		//Root
-		root = new Root().add(0, "b_start", startButton).add(0, "b_back", backButton);
+		root = new Root().add(0, "b_start", startButton).add(0, "b_back", backButton)
+				.add(0, "slots", new Root());
+		
+		root.add(-1, "background", new Entity().add(0, new Background()));
 		
 		for(int i = 0; i < 4; i++) {
-			setSlot(i, host);
+			setSlot(i, false);
 		}
 	}
 	
@@ -85,39 +74,23 @@ public class LobbyMenu implements GameState {
 	}
 	
 	private void setSlot(int i, boolean host) {
-		//Remove old textures
-		if(root.has("slot" + i)) {
-			//Title
-			Texture tex_title = ((Entity) ((Root) root.get("slot" + i)).get("title"))
-				.get(GUIElement.class).getTexture();
-			if(tex_title instanceof FontTexture)
-				tex_title.destroy();
-			
-			//You
-			if(((Root) root.get("slot" + i)).has("you")) {
-				Texture tex_you = ((Entity) ((Root) root.get("slot" + i)).get("you"))
-						.get(GUIElement.class).getTexture();
-				if(tex_you instanceof FontTexture)
-					tex_you.destroy();
-			}
-			
-			//Host
-			if(((Root) root.get("slot" + i)).has("host")) {
-				Texture tex_host = ((Entity) ((Root) root.get("slot" + i)).get("host"))
-						.get(GUIElement.class).getTexture();
-				if(tex_host instanceof FontTexture)
-					tex_host.destroy();
-			}
-			
-			//Remove old slot
-			root.get("slot" + i).destroy();
-			root.remove("slot" + i);
+		//Root
+		Root root = (Root) this.root.get("slots");
+		
+		//Remove old slot
+		if(root.has(Integer.toString(i))) {
+			root.get(Integer.toString(i)).destroy();
+			root.remove(Integer.toString(i));
 		}
 		
-		//Create new gfx
-		Root r_slot = new Root();
-		Entity title = new Entity();
-		GUIElement t_slot = new GUIElement(0, 0, -192 + 128 * i, 0, 128, 128);
+		boolean you = false;
+		
+		if(players[i] != null)
+			you = players[i].getID() == Client.client.getConnection().getID();
+		
+		//Create new slot
+		Entity slot = new Entity().add(0, new LobbySlot(players[i], i, 0, host, you));
+		/*GUIElement t_slot = new GUIElement(0, 0, -192 + 128 * i, 0, 128, 128);
 		if(players[i] == null) {
 			//Add content to "r_slot" if the slot is empty
 			t_slot.setTexture(Texture.DEFAULT);
@@ -149,8 +122,8 @@ public class LobbyMenu implements GameState {
 			}
 		}
 		title.add(0, t_slot);
-		r_slot.add(0, "title", title);
-		root.add(0, "slot" + i, r_slot);
+		r_slot.add(0, "title", title);*/
+		root.add(0, Integer.toString(i), slot);
 	}
 	
 	public void setEmptySlot(int playerID) {
@@ -180,8 +153,7 @@ public class LobbyMenu implements GameState {
 		//Root
 		root.destroy();
 		
-		//Texture
-		ft_start.destroy();
-		ft_back.destroy();
+		for(int i = 0; i < players.length; i++)
+			players[i] = null;
 	}
 }
