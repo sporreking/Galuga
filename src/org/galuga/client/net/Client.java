@@ -13,10 +13,6 @@ public class Client {
 	
 	public static final boolean connect(String ip, int port) {
 		
-		//TODO: Remove this username setter
-		System.out.print("Enter username: ");
-		username = new Scanner(System.in).nextLine();
-		
 		try {
 			client.connect(ip, port);
 		} catch (UnknownHostException e) {
@@ -28,6 +24,10 @@ public class Client {
 		}
 		
 		return true;
+	}
+	
+	public static final void setUsername(String username) {
+		Client.username = username;
 	}
 	
 	public static final String getUsername() {

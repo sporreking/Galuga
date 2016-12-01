@@ -4,9 +4,9 @@ import java.util.Comparator;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import org.galuga.client.gamestate.GameStates;
-import org.galuga.common.packet.game.PacketFetchLobby;
-import org.galuga.common.packet.game.PacketFetchUser;
-import org.galuga.common.packet.game.PacketUserLeft;
+import org.galuga.common.packet.lobby.PacketFetchLobby;
+import org.galuga.common.packet.lobby.PacketFetchUser;
+import org.galuga.common.packet.lobby.PacketUserLeft;
 import org.galuga.common.user.User;
 
 public class PacketQueue {

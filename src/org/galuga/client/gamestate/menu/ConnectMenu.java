@@ -32,7 +32,7 @@ public class ConnectMenu implements GameState {
 		
 		//Connect button
 		connectButton = new Entity().add(0, new Button("Connect", 0, 0, 64, () -> {
-			if(Client.connect(Galuga.IP, Galuga.PORT))
+			if(Client.connect(Galuga.getIP(), Galuga.PORT))
 				GameStateManager.enterState(GameStates.MAIN_MENU);
 		}));
 	}

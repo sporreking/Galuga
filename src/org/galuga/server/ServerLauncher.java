@@ -11,7 +11,7 @@ public class ServerLauncher {
 	public static void main(String[] args) {
 		init();
 		
-		Server.start(Galuga.IP, Galuga.PORT);
+		Server.start(Galuga.getIP(), Galuga.PORT);
 		
 		InputManager.start();
 		

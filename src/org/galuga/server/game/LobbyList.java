@@ -3,11 +3,12 @@ package org.galuga.server.game;
 import java.util.HashMap;
 
 import org.galuga.common.GameMode;
-import org.galuga.common.packet.game.PacketFetchLobby;
-import org.galuga.common.packet.game.PacketFetchUser;
-import org.galuga.common.packet.game.PacketJoinLobby;
-import org.galuga.common.packet.game.PacketLeaveLobby;
-import org.galuga.common.packet.game.PacketUserLeft;
+import org.galuga.common.packet.lobby.PacketFetchLobby;
+import org.galuga.common.packet.lobby.PacketFetchUser;
+import org.galuga.common.packet.lobby.PacketJoinLobby;
+import org.galuga.common.packet.lobby.PacketLeaveLobby;
+import org.galuga.common.packet.lobby.PacketStartGame;
+import org.galuga.common.packet.lobby.PacketUserLeft;
 import org.galuga.common.user.User;
 import org.galuga.server.net.Server;
 
@@ -32,6 +33,17 @@ public class LobbyList {
 		lobbys.put(i, new Lobby(mode, i, name));
 		
 		return i;
+	}
+	
+	public static final void start(int requestingID, int lobbyID) {
+		Lobby lobby = lobbys.get(lobbyID);
+		
+		if(lobby == null || requestingID != lobby.getHostID())
+			return;
+		
+		GameManager.create(lobby);
+		
+		lobbys.remove(lobbyID);
 	}
 	
 	public static final void join(int lobbyID, int playerID, boolean host) {

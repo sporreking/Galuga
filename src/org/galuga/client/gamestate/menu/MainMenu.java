@@ -3,11 +3,14 @@ package org.galuga.client.gamestate.menu;
 import org.galuga.client.gamestate.Background;
 import org.galuga.client.gamestate.GameStates;
 import org.galuga.client.gui.Button;
+import org.lwjgl.glfw.GLFW;
 
+import sk.audio.AudioManager;
 import sk.entity.Entity;
 import sk.entity.Root;
 import sk.gamestate.GameState;
 import sk.gamestate.GameStateManager;
+import sk.util.io.Keyboard;
 
 public class MainMenu implements GameState {
 	
@@ -39,7 +42,7 @@ public class MainMenu implements GameState {
 		root = new Root().add(0, "b_play", playButton)
 				.add(0, "b_settings", settingsButton).add(0, "b_exit", exitButton);
 		
-		root.add(-1, "background", new Entity().add(0, new Background()));
+		root.add(-1, "background", new Entity().add(0, Background.INSTANCE));
 	}
 	
 	@Override

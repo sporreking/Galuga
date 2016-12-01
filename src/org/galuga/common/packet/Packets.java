@@ -1,6 +1,7 @@
 package org.galuga.common.packet;
 
 import org.galuga.common.packet.game.*;
+import org.galuga.common.packet.lobby.*;
 
 import sk.serializer.SKSerializer;
 
@@ -15,6 +16,8 @@ public class Packets {
 		SKSerializer.register(PacketLeaveLobby.class);
 		SKSerializer.register(PacketFetchUser.class);
 		SKSerializer.register(PacketUserLeft.class);
+		SKSerializer.register(PacketRequestGameStart.class);
+		SKSerializer.register(PacketStartGame.class);
 	}
 	
 }

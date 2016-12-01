@@ -40,7 +40,7 @@ public class ModeMenu implements GameState {
 		//Root
 		root = new Root().add(0, "b_arcade", arcadeButton).add(0, "b_back", backButton);
 		
-		root.add(-1, "background", new Entity().add(0, new Background()));
+		root.add(-1, "background", new Entity().add(0, Background.INSTANCE));
 	}
 	
 	@Override

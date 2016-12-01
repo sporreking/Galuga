@@ -3,7 +3,7 @@ package org.galuga.server.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.galuga.common.packet.game.PacketLeaveLobby;
+import org.galuga.common.packet.lobby.PacketLeaveLobby;
 import org.galuga.common.user.User;
 import org.galuga.server.net.Server;
 

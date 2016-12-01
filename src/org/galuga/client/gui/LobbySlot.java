@@ -1,5 +1,6 @@
 package org.galuga.client.gui;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -8,14 +9,17 @@ import java.awt.image.BufferedImage;
 import org.galuga.Galuga;
 import org.galuga.common.user.User;
 
+import sk.game.Window;
 import sk.gfx.Texture;
 import sk.gfx.gui.GUIElement;
 
 public class LobbySlot extends GUIElement {
 	
-	public static final int SIZE = 128;
+	public static final int SIZE = (int) (256 * Window.getWidth() / 1280f);
 	
 	private User player;
+	
+	private int slot;
 	
 	private boolean host, you;
 	
@@ -26,6 +30,7 @@ public class LobbySlot extends GUIElement {
 		super(0, anchorY, (int) ((SIZE + 16) * slot - (SIZE + 16) * 1.5f), 0, SIZE, SIZE);
 		
 		this.player = player;
+		this.slot = slot;
 		this.host = host;
 		this.you = you;
 		
@@ -54,13 +59,41 @@ public class LobbySlot extends GUIElement {
 		//Caption
 		font = Galuga.getFont(48f);
 		
+		font = Galuga.getFont(Math.min(((float) SIZE - 32f) / gfx.getFontMetrics(font)
+				.stringWidth(player.getUsername()) * 48f, 48f));
+		
 		gfx.setFont(font);
 		
-		FontMetrics fm = gfx.getFontMetrics();
+		FontMetrics fm = gfx.getFontMetrics(font);
 		
 		gfx.drawString(player.getUsername(), (SIZE - fm.stringWidth(player.getUsername())) / 2,
 				(SIZE + fm.getHeight() / 2) / 2);
 		
+		/* --- */
+		
+		font = Galuga.getFont(24f);
+		
+		gfx.setFont(font);
+		
+		fm = gfx.getFontMetrics(font);
+		
+		gfx.setColor(Color.RED);
+		
+		//Host
+		if(host) {
+			gfx.drawString("HOST", 16, SIZE - 16);
+		}
+		
+		//You
+		if(you) {
+			gfx.drawString("YOU", SIZE - fm.stringWidth("YOU") - 16, SIZE - 16);
+		}
+		
+		//Name caption
+		String nameCaption = "PLAYER" + (slot + 1);
+		
+		gfx.drawString(nameCaption, (SIZE - fm.stringWidth(nameCaption)) / 2,
+				SIZE / 3 * 2 + fm.getHeight() / 2);
 		
 		//Create texture
 		int[] pixels = new int[img.getWidth() * img.getHeight()];

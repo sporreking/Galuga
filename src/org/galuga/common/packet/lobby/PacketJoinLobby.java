@@ -1,4 +1,4 @@
-package org.galuga.common.packet.game;
+package org.galuga.common.packet.lobby;
 
 public class PacketJoinLobby {
 	

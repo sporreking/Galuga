@@ -10,9 +10,9 @@ import org.galuga.client.gui.Button;
 import org.galuga.client.net.Client;
 import org.galuga.client.net.PacketQueue;
 import org.galuga.common.GameMode;
-import org.galuga.common.packet.game.PacketCreateLobby;
-import org.galuga.common.packet.game.PacketJoinLobby;
-import org.galuga.common.packet.game.PacketRequestLobbys;
+import org.galuga.common.packet.lobby.PacketCreateLobby;
+import org.galuga.common.packet.lobby.PacketJoinLobby;
+import org.galuga.common.packet.lobby.PacketRequestLobbys;
 
 import sk.entity.Container;
 import sk.entity.Entity;
@@ -63,7 +63,7 @@ public class LobbyPickMenu implements GameState {
 		root = new Root().add(0, "b_create", createButton).add(0, "b_back", backButton)
 				.add(0, "b_refresh", refreshButton).add(0, "lobby_list", new Container());
 		
-		root.add(-1, "background", new Entity().add(0, new Background()));
+		root.add(-1, "background", new Entity().add(0, Background.INSTANCE));
 		
 		//Request games
 		refresh();
