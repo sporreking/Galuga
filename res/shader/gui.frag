@@ -1,4 +1,6 @@
-#version 440
+#version 310 es
+
+precision mediump float;
 
 uniform bool b_is_fader;
 uniform float f_value;

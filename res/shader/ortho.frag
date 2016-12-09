@@ -1,4 +1,6 @@
-#version 440
+#version 310 es
+
+precision mediump float;
 
 uniform sampler2D t_sampler;
 
