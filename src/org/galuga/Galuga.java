@@ -31,7 +31,7 @@ public final class Galuga {
 		
 		//Load font
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, new File("res/fixedsys.ttf"));
+			font = Font.createFont(Font.TRUETYPE_FONT, new File("res/pixie.otf"));
 		} catch (FontFormatException e) {
 			System.err.println("Invalid font format!");
 			e.printStackTrace();

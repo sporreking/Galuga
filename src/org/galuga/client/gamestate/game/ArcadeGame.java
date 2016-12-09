@@ -18,6 +18,9 @@ public class ArcadeGame implements GameState {
 	public void setInfo(int gameID, int numOfPlayers) {
 		this.gameID = gameID;
 		this.numOfPlayers = numOfPlayers;
+		
+		System.out.println("Entering arcade game...\nGame ID: " + gameID
+				+ "\nPlayers: " + numOfPlayers);
 	}
 	
 	@Override

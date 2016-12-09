@@ -24,8 +24,8 @@ public class ClientLauncher {
 		
 		properties.title = "Galuga - v1.0";
 		properties.startState = GameStates.CONNECT_MENU;
-		properties.width = 800;
-		properties.height = 600;
+		properties.width = 1280;
+		properties.height = 720;
 		properties.clearColor = new Vector4f(35f / 255f, 39f / 255f, 68f / 255f, 1f);
 		
 		AudioManager.start();
