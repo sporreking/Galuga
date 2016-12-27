@@ -1,14 +1,18 @@
 package org.galuga.client.net;
 
 import org.galuga.client.gamestate.GameStates;
+import org.galuga.client.gamestate.game.ArcadeGame;
 import org.galuga.client.gamestate.menu.LobbyPickMenu;
 import org.galuga.client.gamestate.menu.LobbyPickMenu.LobbyListItem;
 import org.galuga.common.GameMode;
 import org.galuga.common.packet.PacketLogin;
+import org.galuga.common.packet.game.PacketJoinGame;
+import org.galuga.common.packet.game.PacketSetVelocity;
 import org.galuga.common.packet.lobby.PacketFetchLobby;
 import org.galuga.common.packet.lobby.PacketJoinLobby;
 import org.galuga.common.packet.lobby.PacketLeaveLobby;
 import org.galuga.common.packet.lobby.PacketStartGame;
+import org.galuga.server.game.Arcade;
 
 import sk.gamestate.GameStateManager;
 import sk.net.SKClient;
@@ -61,6 +65,24 @@ public class ClientListener implements SKPacketListener {
 				GameStateManager.enterState(GameStates.ARCADE_GAME);
 				break;
 			}
+		}
+		
+		//Join game
+		else if(packet instanceof PacketJoinGame) {
+			PacketJoinGame p = (PacketJoinGame) packet;
+			
+			GameMode.setCurrent(p.MODE);
+			
+			switch(p.MODE) {
+			case GameMode.ARCADE:
+				GameStates.ARCADE_GAME.addPlayer(p.SLOT, p.ID, p.NAME);
+				break;
+			}
+		}
+		
+		//Game packets
+		else if(packet instanceof PacketSetVelocity) {
+			GameQueue.add(packet);
 		}
 		
 		//Packets that have to be handled at the main thread

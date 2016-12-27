@@ -2,11 +2,13 @@ package org.galuga.server.net;
 
 import org.galuga.common.GameMode;
 import org.galuga.common.packet.PacketLogin;
+import org.galuga.common.packet.game.PacketSetVelocity;
 import org.galuga.common.packet.lobby.PacketCreateLobby;
 import org.galuga.common.packet.lobby.PacketJoinLobby;
 import org.galuga.common.packet.lobby.PacketLeaveLobby;
 import org.galuga.common.packet.lobby.PacketRequestGameStart;
 import org.galuga.common.packet.lobby.PacketRequestLobbys;
+import org.galuga.server.game.GameManager;
 import org.galuga.server.game.Lobby;
 import org.galuga.server.game.LobbyList;
 
@@ -88,6 +90,12 @@ public class ServerListener implements SKPacketListener {
 		else if(packet instanceof PacketRequestGameStart) {
 			PacketRequestGameStart p = (PacketRequestGameStart) packet;
 			LobbyList.start(connection.getID(), p.LOBBY_ID);
+		}
+		
+		//Set velocity
+		else if(packet instanceof PacketSetVelocity) {
+			PacketSetVelocity p = (PacketSetVelocity) packet;
+			GameManager.setVelocity(p.ID, p.START_X, p.START_Y, p.DX, p.DY);
 		}
 	}
 }

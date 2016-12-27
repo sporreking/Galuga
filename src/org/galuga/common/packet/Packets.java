@@ -18,6 +18,7 @@ public class Packets {
 		SKSerializer.register(PacketUserLeft.class);
 		SKSerializer.register(PacketRequestGameStart.class);
 		SKSerializer.register(PacketStartGame.class);
+		SKSerializer.register(PacketJoinGame.class);
+		SKSerializer.register(PacketSetVelocity.class);
 	}
-	
 }

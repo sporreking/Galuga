@@ -34,6 +34,10 @@ public class Client {
 		return username;
 	}
 	
+	public static final int getID() {
+		return client.getConnection().getID();
+	}
+	
 	public static final SKClient client = new SKClient();
 	
 	static {

@@ -4,13 +4,15 @@ import java.util.Comparator;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import org.galuga.client.gamestate.GameStates;
+import org.galuga.client.gamestate.game.ArcadeGame;
+import org.galuga.common.GameMode;
 import org.galuga.common.packet.game.PacketSetVelocity;
 import org.galuga.common.packet.lobby.PacketFetchLobby;
 import org.galuga.common.packet.lobby.PacketFetchUser;
 import org.galuga.common.packet.lobby.PacketUserLeft;
 import org.galuga.common.user.User;
 
-public class PacketQueue {
+public class GameQueue {
 	
 	private static final PriorityBlockingQueue<Object> packets =
 			new PriorityBlockingQueue<>(1, new Comparator<Object>() {
@@ -20,7 +22,7 @@ public class PacketQueue {
 		        }
 			});
 	
-	public static final synchronized void add(Object packet) {
+	public static final void add(Object packet) {
 		packets.put(packet);
 	}
 	
@@ -28,24 +30,19 @@ public class PacketQueue {
 		while(!packets.isEmpty()) {
 			Object packet = packets.poll();
 			
-			//Fetch lobby
-			if(packet instanceof PacketFetchLobby) {
-				PacketFetchLobby p = (PacketFetchLobby) packet;
-				GameStates.LOBBY_PICK_MENU.add(p.ID, p.NAME, p.PLAYERS);
-			}
-			
-			//Fetch user
-			else if(packet instanceof PacketFetchUser) {
-				PacketFetchUser p = (PacketFetchUser) packet;
-				GameStates.LOBBY_MENU.setPlayerSlot(p.SLOT, new User(p.ID, p.NAME), p.HOST);
-			}
-			
-			//User left
-			else if(packet instanceof PacketUserLeft) {
-				PacketUserLeft p = (PacketUserLeft) packet;
-				GameStates.LOBBY_MENU.setEmptySlot(p.ID);
+			//Set velocity
+			if(packet instanceof PacketSetVelocity) {
+				PacketSetVelocity p = (PacketSetVelocity) packet;
+				
+				new Thread(() -> {
+						switch(GameMode.current()) {
+						case GameMode.ARCADE:
+							GameStates.ARCADE_GAME.setVelocity(p.ID, p.START_X, p.START_Y, p.DX, p.DY);
+							break;
+						}
+					}
+				).start();
 			}
 		}
 	}
-	
 }

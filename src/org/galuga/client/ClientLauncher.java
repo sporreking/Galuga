@@ -32,7 +32,7 @@ public class ClientLauncher {
 		
 		Audio audio = new Audio("res/audio/elevator.wav");
 		
-		AudioManager.playSource(0, 1, 1, audio, true);
+//		AudioManager.playSource(0, 1, 1, audio, true);
 		
 		SKNet.init();
 		Packets.register();
